@@ -1,0 +1,164 @@
+﻿@page "/Register"
+
+@using CommonLayer
+@using BusinessLayer
+@inject IEmployeeManager EmployeeManager
+@inject NavigationManager navManager
+
+<header class="header-content header">
+    <div class="logo-content">
+        <img src="./assets/images/logo.png" alt="logo">
+        <div>
+            <span class="emp-text">employee</span><br>
+            <span class="emp-text emp-payroll">payroll</span>
+        </div>
+    </div>
+</header>
+
+<div class="form-content">
+    <EditForm Model="@Emp" OnSubmit="Register">
+        <div class="form-head">employee payroll form</div>
+        <div class="row-content">
+            <label class="label text" for="name">Name</label>
+            <input class="input" type="text" name="name" id="name" @bind-value="@Emp.Name" required>
+            <error-output class="name-error"></error-output>
+        </div>
+        <div class="row-content">
+            <label class="label text" for="profile">Profile image</label>
+            <div class="profile-radio-content">
+                <label class="checkMain">
+                    <input type="checkbox" class="largerCheckbox" id="profile1" name="profile"
+                           value="./assets/profile-images/Ellipse-1.png"
+                           @onchange="@(()=> AddImg("./assets/profile-images/Ellipse-1.png"))" />
+                    <span class="checkmark" id="profile1"></span>
+                    <img class="profile" id="img1" src="./assets/profile-images/Ellipse-1.png" />
+                </label>
+                <label class="checkMain">
+                    <input type="checkbox" class="largerCheckbox" id="profile2" name="profile"
+                           value="./assets/profile-images/Ellipse-2.png"
+                           @onchange="@(()=> AddImg("./assets/profile-images/Ellipse-2.png"))" />
+                    <span class="checkmark" id="profile2"></span>
+                    <img class="profile" id="img1" src="./assets/profile-images/Ellipse-2.png" />
+                </label>
+                <label class="checkMain">
+                    <input type="checkbox" class="largerCheckbox" id="profile3" name="profile"
+                           value="./assets/profile-images/Ellipse-3.png"
+                           @onchange="@(()=> AddImg("./assets/profile-images/Ellipse-3.png"))" />
+                    <span class="checkmark" id="profile3"></span>
+                    <img class="profile" id="img1" src="./assets/profile-images/Ellipse-3.png" />
+                </label>
+                <label class="checkMain">
+                    <input type="checkbox" class="largerCheckbox" id="profile4" name="profile"
+                           value="./assets/profile-images/Ellipse-4.png"
+                           @onchange="@(()=> AddImg("./assets/profile-images/Ellipse-4.png"))" />
+                    <span class="checkmark" id="profile4"></span>
+                    <img class="profile" id="img1" src="./assets/profile-images/Ellipse-4.png" />
+                </label>
+            </div>
+        </div>
+        @*<div class="row-content">
+        <label class="label text">Gender</label>
+        <div @bind="@Emp.Gender">
+        <input type="checkbox" id="male" name="gender" value="male">
+        <label class="text" for="male">Male</label>
+        <input type="checkbox" id="female" name="gender" value="female">
+        <label class="text" for="female">Female</label>
+        </div>
+        </div>*@
+        @*<div class="row-content">
+        <label class="label text" for="gender">Gender</label>
+        <select @bind="@Emp.Gender" class="form-control">
+        <option value="">-- Select Gender --</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        </select>
+        </div>*@
+
+        <div class="row-content">
+            <label class="label text" for="gender">Gender</label>
+            <div class="profile-radio-content">
+                <MatRadioGroup @bind-Value="@Emp.Gender" Items="@Genders" required></MatRadioGroup>
+            </div>
+        </div>
+
+        <div class="row-content">
+            <label class="label text" for="gender">Department</label>
+            <select @bind="@Emp.Department" class="form-control">
+                <option value="">-- Select Department --</option>
+                <option value="HR">HR</option>
+                <option value="Engineer">ENG</option>
+                <option value="Finanace">CSE</option>
+            </select>
+        </div>
+        @*<div class="row-content">
+        <label class="label text">Department</label>
+        <div @bind="@Emp.Department">
+        <input class="checkbox" type="checkbox" id="hr" name="department" value="HR">
+        <label class="text" for="hr">HR</label>
+        <input class="checkbox" type="checkbox" id="sales" name="department" value="Sales">
+        <label class="text" for="sales">Sales</label>
+        <input class="checkbox" type="checkbox" id="finance" name="department" value="Finance">
+        <label class="text" for="finance">Finance</label>
+        <input class="checkbox" type="checkbox" id="engineer" name="department" value="Engineer">
+        <label class="text" for="engineer">Engineer</label>
+        <input class="checkbox" type="checkbox" id="others" name="department" value="Others">
+        <label class="text" for="others">Others</label>
+        </div>
+        </div>*@
+        <div class="row-content">
+            <label class="label text" for="salary">Choose your salary: </label>
+            <input class="input" type="number" name="salary" id="salary" min="30000" max="60000" step="100"
+                   defaultvalue="40000" @bind="@Emp.Salary">
+            <output class="salary-output text" for="salary">40000</output>
+        </div>
+        <div class="row-content">
+            <label class="label text" for="date">Start Date</label>
+            <input class="input" type="date" name="date" id="date" @bind="@Emp.StartDate">
+            <error-output class="date-error"></error-output>
+        </div>
+        <div class="row-content">
+            <label class="label text" for="notes">Notes</label>
+            <textarea class="input" name="Notes" id="notes" @bind="@Emp.Notes"></textarea>
+        </div>
+        <div class="buttonParent">
+            <a href="" class="button cancelButton">Cancel</a>
+            <div class="submit-reset">
+                <button type="submit" class="button submitButton" id="submitButton">Submit</button>
+                <button type="reset" class="button resetButton" id="resetButton">Reset</button>
+            </div>
+            <MatSnackbar @bind-IsOpen="@snackBarIsOpen">
+                <MatSnackbarContent>Employee Registered Successfully......!!!!!</MatSnackbarContent>
+                <MatSnackbarActions>
+                    <a href="HomePage"><MatButton Raised="true">Go to Dashboard</MatButton></a>                   
+                </MatSnackbarActions>
+            </MatSnackbar>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    EmployeeModel Emp = new EmployeeModel();
+
+    bool snackBarIsOpen = false;
+
+    protected string[] Genders = {
+        "Male",
+        "Female",
+        "Others",
+    };
+
+    protected async void Register()
+    {
+        EmployeeManager.AddEmployee(Emp);
+        snackBarIsOpen = true;
+        this.StateHasChanged();
+
+        await Task.Delay(5000);
+        navManager.NavigateTo("/HomePage");
+    }
+
+    protected void AddImg(string image)
+    {
+        Emp.ProfileImage = image;
+    }
+}

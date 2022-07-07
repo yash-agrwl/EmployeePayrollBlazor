@@ -1,0 +1,82 @@
+﻿@page "/Delete/{EmployeeId}"
+
+@using BusinessLayer
+@using CommonLayer
+@inject IEmployeeManager EmployeeManager
+@inject NavigationManager navManager
+
+<header class="header-content header">
+    <div class="logo-content">
+        <img src="./assets/images/logo.png" alt="logo">
+        <div>
+            <span class="emp-text">employee</span><br>
+            <span class="emp-text emp-payroll">payroll</span>
+        </div>
+    </div>
+</header>
+
+<div class="form-content">
+    <form>
+        <h3>Are you sure you want to delete this?</h3>
+        <div class="col">
+            <div>
+                <label>Employee ID:</label>
+                <label>@Emp.EmployeeID</label>
+            </div>
+            <div>
+                <label>Name:</label>
+                <label>@Emp.Name</label>
+            </div>
+            <div>
+                <label>Profile Image:</label>
+                <img class="profile" id="img1" src=@Emp.ProfileImage />
+            </div>
+            <div>
+                <label>Gender:</label>
+                <label>@Emp.Gender</label>
+            </div>
+            <div>
+                <label>Department:</label>
+                <label>@Emp.Department</label>
+            </div>
+            <div>
+                <label>Salary:</label>
+                <label>@Emp.Salary</label>
+            </div>
+            <div>
+                <label>StartDate:</label>
+                <label>@Emp.StartDate</label>
+            </div>
+            <div>
+                <label>Notes:</label>
+                <label>@Emp.Notes</label>
+            </div>
+        </div>
+        <div class="col">
+            <div>
+                <input type="button" @onclick="@DeleteCustomers" class="btn btn-primary" value="Delete" />
+                <input type="button" @onclick="@Cancel" class="btn btn-primary" value="Cancel" />
+            </div>
+        </div>
+    </form>
+</div>
+
+@code {
+    [Parameter]
+    public string EmployeeId { get; set; }
+    EmployeeModel Emp = new EmployeeModel();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Emp = await Task.Run(() => EmployeeManager.GetEmployeeById(Convert.ToInt32(EmployeeId)));
+    }
+    protected void DeleteCustomers()
+    {
+        EmployeeManager.DeleteEmployee(Emp.EmployeeID);
+        navManager.NavigateTo("HomePage");
+    }
+    void Cancel()
+    {
+        navManager.NavigateTo("HomePage");
+    }
+}
